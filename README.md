@@ -15,7 +15,7 @@ tags: [Sommersemester2026, Softwareentwicklung, Übung08]
 
 -->
 
-[![LiaScript Course](https://raw.githubusercontent.com/LiaScript/LiaScript/master/badges/course.svg)](https://liascript.github.io/course/?https://raw.githubusercontent.com/Ifi-Softwareentwicklung-SoSe2026/exercise_08/refs/heads/main/README.md)
+[![LiaScript Course](https://raw.githubusercontent.com/LiaScript/LiaScript/master/badges/course.svg)](https://liascript.github.io/course/?https://raw.githubusercontent.com/Ifi-Softwareentwicklung-SoSe2026/exercise_08_Franzcode2000/refs/heads/main/README.md)
 
 # Aufgabe 08
 
@@ -75,27 +75,51 @@ Beantworte vor den Codeänderungen kurz:
 1. Welche Teile des Codes gehören zur Prozesslogik?
 
 ```text
-Hier Antwort einfügen
+- Definition der Arbeitsschritte (string[] steps)
+- Äußere foreach-Schleife (Schritte nacheinander durchlaufen)
+- Innere for-Schleife (Fortschritt 0–100 % in 5-%-Schritten)
+- if (percent == 50) für die Halbzeit-Warnung
+- Thread.Sleep(80) zur Simulation der Bearbeitungszeit
+- Statusübergänge (Start / Abschluss / Ende)
 ```
 
 2. Welche Teile gehören zur Konsolenvisualisierung?
 
 ```text
-Hier Antwort einfügen
+- Die gesamte DrawProgressBar-Methode
+- Konstanten: width, filledChar, emptyChar, barStartChar, barEndChar
+- Erstellen des Balkens mit new string(...)
+- Positionierung mittels \r (Carriage Return)
+- Formatierung: $"\r{stepName,-22} ... {percent,3}%"
+- Console.CursorVisible = true/false
+- Console.WriteLine() für Leerzeilen
 ```
 
 
 3. Welche Teile wären in einer GUI- oder Webanwendung schwer wiederverwendbar?
 
 ```text
-Hier Antwort einfügen
+- Die gesamte DrawProgressBar-Methode (nutzt konsolenspezifische Zeichen)
+- Verwendung von \r zum Überschreiben der Zeile
+- Thread.Sleep(80) (blockiert UI/Request-Thread)
+- Synchrone, lineare Main-Methode (GUI/Web sind ereignisgesteuert/asynchron)
+- Feste Zeichenbreite von 30 (nicht skalierbar für verschiedene UI-Größen)
 ```
 
 
 4. Was müsstest du ändern, wenn du Logging hinzufügen willst?
 
 ```text
-Hier Antwort einfügen
+- Konsolenausgaben durch ILogger-Aufrufe ersetzen:
+  Console.WriteLine(...) → logger.LogInformation(...)
+  Warning → logger.LogWarning(...)
+- Thread.Sleep(80) durch await Task.Delay(80) ersetzen
+- Methode als async Task kennzeichnen
+- Logging-Abstraktion (ILogger<Program>) per Dependency Injection einfügen
+- Entweder Fortschritt nur bei Meilensteinen loggen (0%, 50%, 100%)
+  oder strukturierte Debug-Ereignisse für jeden Prozentwert:
+  logger.LogDebug("Progress {Step}: {Percent}%", step, percent)
+- Bei Bedarf einen Logging-Anbieter (Console, Datei, Serilog) konfigurieren
 ```
 
 
